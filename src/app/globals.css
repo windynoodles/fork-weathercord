@@ -7,6 +7,8 @@
   --outline: #282828;
   --box-button-active: #aeaeae33;
   --sub: #9e9e9e;
+
+  interpolate-size: allow-keywords;
 }
 
 body {

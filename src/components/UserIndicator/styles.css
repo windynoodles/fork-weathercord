@@ -1,0 +1,7 @@
+.container:not(:is(div:has(> .open) > div > div)) {
+  height: 0rem !important;
+}
+
+.container {
+  transition: height 0.25s;
+}

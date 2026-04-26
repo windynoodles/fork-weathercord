@@ -8,7 +8,7 @@ const UserIndicatorClient = (props: Record<string, any> & {
   const [open, setOpen] = useState(false);
 
   return (
-    <button className={`block${open ? " open" : ""}`} onClick={(event) => {
+    <button className={`block${open ? " group open" : ""}`} onClick={(event) => {
       if (event.currentTarget) setOpen(!open);
     }}>
       {props.children}

@@ -17,8 +17,12 @@ const UserIndicatorSmall = async (props: Record<string, any> & {
       backgroundImage: props.splash ? `linear-gradient(90deg, #000000ab 0%, #00000090 100%), url(${props.splash})` : `linear-gradient(90deg, ${accent.LightVibrant?.hex}31 0%, ${accent.LightVibrant?.hex}20 50%, ${accent.LightVibrant?.hex}10 100%)`,
       backgroundSize: "cover"
     }}>
-      <img className="rounded-full h-[2.6rem]" src={props.avatar} alt={props.displayName + "'s avatar"} />
-      <div className="leading-1 grow">
+      <img className="rounded-full h-[2.6rem] group-[.open]:-translate-y-10" src={props.avatar} alt={props.displayName + "'s avatar"} style={{
+        transition: "translate 0.25s"
+      }} />
+      <div className="leading-1 grow group-[.open]:-translate-y-10" style={{
+        transition: "translate 0.25s"
+      }}>
         {props.displayName}<br />
         <sub>@{props.username}</sub>
       </div>

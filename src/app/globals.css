@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0e0e0e;
+  --accent: #ccaff1;
+  --background: #060606;
+  --background-2: #090909;
   --foreground: #fafafa;
   --spacing: 1rem;
-  --outline: #282828;
+  --outline: #292929;
+  --outline-active: #424242;
   --box-button-active: #aeaeae33;
   --sub: #9e9e9e;
-
-  interpolate-size: allow-keywords;
 }
 
 body {
@@ -17,6 +18,49 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-sub {
+sub, label *:not(input) {
   color: var(--sub);
+  font-size: 0.75rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+label {
+  display: block;
+  width: 100%;
+}
+
+input {
+  border-radius: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  outline: 1px solid var(--outline);
+  background-color: var(--background-2);
+  width: 100%;
+  font-size: 0.9rem;
+  transition: outline-color 0.125s;
+}
+
+input:focus {
+  outline-color: var(--accent);
+}
+
+input[type="submit"] {
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  outline-color: var(--outline-active);
+}
+
+@layer base {
+  h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
 }

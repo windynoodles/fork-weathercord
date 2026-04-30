@@ -11,7 +11,6 @@ const UsernameIDSwitcher = (props: {
   const [mouseDown, setMouseDown] = useState(false);
   return (
     <button
-      tabIndex={1}
       onMouseDown={() => {
         setDragging(false);
         setMouseDown(true);

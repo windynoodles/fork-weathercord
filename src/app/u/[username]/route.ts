@@ -80,6 +80,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ usernam
 interface PUTBody {
   bio: string;
   displayName: string;
+  nameFont: string;
   pronouns: string;
   username: string;
 }
@@ -99,15 +100,17 @@ export async function PUT(req: Request, { params }: { params: Promise<{ username
 
   if (requester.id !== accountToChange.id && !requester.admin) return new Response("You cannot edit this account", { status: 403 });
 
-  const { bio, displayName, pronouns, username }: Partial<PUTBody> = await req.json();
+  const { bio, displayName, nameFont, pronouns, username }: Partial<PUTBody> = await req.json();
 
   if (typeof bio !== "string") return new Response("Missing bio field", { status: 400 });
   if (typeof displayName !== "string" && typeof displayName !== "undefined") return new Response("Missing displayName field", { status: 400 });
+  if (typeof nameFont !== "string" && typeof nameFont !== "undefined") return new Response("Missing nameFont field", { status: 400 });
   if (typeof pronouns !== "string") return new Response("Missing pronouns field", { status: 400 });
   if (typeof username !== "string") return new Response("Missing username field", { status: 400 });
 
   if (bio.length > 500) return new Response("Bio is too long", { status: 400 });
   if (displayName && displayName.length > 40) return new Response("Display name is too long", { status: 400 });
+  if (nameFont.length > 20) return new Response("Name font is too long", { status: 400 });
   if (pronouns.length > 20) return new Response("Pronouns are too long", { status: 400 });
   if (username.length < 1) return new Response("Username is too short", { status: 400 });
   if (username.length > 20) return new Response("Username is too long", { status: 400 });
@@ -118,6 +121,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ username
   await db.update(accountsTable).set({
     bio,
     displayName,
+    nameFont,
     pronouns,
     username
   }).where(eq(accountsTable.id, accountToChange.id)).execute();

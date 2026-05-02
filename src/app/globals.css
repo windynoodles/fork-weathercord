@@ -1,8 +1,44 @@
 @import "tailwindcss";
 
 @font-face {
+  font-family: "Alfa Slab One";
+  src: url("/fonts/AlfaSlabOne-Regular.ttf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Goldman";
+  src: url("/fonts/Goldman-Regular.ttf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Leckerli One";
+  src: url("/fonts/LeckerliOne-Regular.ttf");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Goldman";
+  src: url("/fonts/Goldman-Bold.ttf");
+  font-weight: 700;
+}
+
+@font-face {
   font-family: "Maple Mono";
-  src: "/fonts/maple-mono-latin-400-normal.ttf";
+  src: url("/fonts/maple-mono-latin-400-normal.ttf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Maple Mono";
+  src: url("/fonts/maple-mono-latin-700-normal.ttf");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Merriweather";
+  src: url("/fonts/Merriweather-VariableFont_opsz,wdth,wght.ttf");
 }
 
 :root {
@@ -41,7 +77,7 @@ body {
   color: var(--sub);
 }
 
-sub, label *:not(input, textarea) {
+sub, label *:not(input, textarea, button.action, select) {
   color: var(--sub);
   font-size: 0.75rem;
 }
@@ -57,7 +93,7 @@ label {
   width: 100%;
 }
 
-input, textarea, button.action {
+input, textarea, button.action, select {
   border-radius: 0.75rem;
   padding: 0.3rem 0.65rem;
   outline: 1px solid var(--outline);
@@ -67,7 +103,7 @@ input, textarea, button.action {
   transition: outline-color 0.125s;
 }
 
-:is(input, textarea, button.action):focus-visible {
+:is(input, textarea, button.action, select):focus-visible {
   outline-color: var(--accent);
 }
 

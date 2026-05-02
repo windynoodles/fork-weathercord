@@ -13,6 +13,7 @@ const AccountSettingsModal = (props: {
 }) => {
   let [bio, setBio] = useState(props.account.bio ?? "");
   let [displayName, setDisplayName] = useState(props.account.displayName ?? "");
+  let [nameFont, setNameFont] = useState(props.account.nameFont ?? "");
   let [pronouns, setPronouns] = useState(props.account.pronouns ?? "");
   let [username, setUsername] = useState(props.account.username);
 
@@ -29,6 +30,7 @@ const AccountSettingsModal = (props: {
             bio,
             displayName,
             pronouns,
+            nameFont,
             username
           })
         });
@@ -45,7 +47,7 @@ const AccountSettingsModal = (props: {
           email: props.account.email,
           id: props.account.id,
           joined: props.account.joined,
-          nameFont: nullish(props.account.nameFont),
+          nameFont: nullish(nameFont),
           pronouns: nullish(pronouns),
           username
         });
@@ -54,6 +56,21 @@ const AccountSettingsModal = (props: {
         <label>
           <div>Display Name</div>
           <input type="text" value={displayName} placeholder={username} onChange={(event) => setDisplayName(event.currentTarget.value)} />
+        </label>
+        <label>
+          <div>Name Font</div>
+          <select value={nameFont} onChange={(event) => {
+            setNameFont(event.target.value);
+          }} style={{
+            fontFamily: nameFont
+          }}>
+            <option value="">Default</option>
+            <option value="Alfa Slab One">Bold</option>
+            <option value="Leckerli One">Cursive</option>
+            <option value="Maple Mono">Monospace</option>
+            <option value="Merriweather">Serif</option>
+            <option value="Goldman">Techno</option>
+          </select>
         </label>
         <label>
           <div>Username</div>
@@ -68,8 +85,8 @@ const AccountSettingsModal = (props: {
           <textarea value={bio} onChange={(event) => setBio(event.currentTarget.value)}></textarea>
         </label>
         <ActionRow>
-          <button className="action" onClick={props.closeModal}>Cancel</button>
           <input type="submit" value="Save profile" />
+          <button className="action" onClick={props.closeModal}>Cancel</button>
         </ActionRow>
       </form>
       <div style={{

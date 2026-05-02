@@ -58,12 +58,12 @@ export async function POST(req: Request, { params }: { params: Promise<{ usernam
 
   const authCode = cryptoRandomString({ length: 100 });
   (await cookies()).set("auth", authCode);
-  db.insert(sessionsTable).values({
+  await db.insert(sessionsTable).values({
     code: authCode,
     date: Date.now(),
     id,
     userAgent: req.headers.get("User-Agent")
-  });
+  }).execute();
 
   const passwordHash = await hash(password, 10);
   await db.insert(accountsTable).values({

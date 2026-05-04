@@ -15,7 +15,7 @@ const TabList = (props: {
   const tabs = Object.keys(props.tabList).filter((value) => isNaN(parseInt(value))).length - 1;
 
   let [hoveredTab, setHoveredTab] = useState(tabs + 1);
-  let [tabY, setTabY] = useState(0);
+  let [tabY, setTabY] = useState(1);
 
   requestAnimationFrame(() => {
     if (Math.abs(hoveredTab - tabs - tabY) > 0.0000001) setTabY(tabY + (hoveredTab - tabs - tabY) / 3);

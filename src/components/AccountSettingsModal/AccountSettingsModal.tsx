@@ -23,7 +23,7 @@ const AccountSettingsModal = (props: {
   return (
     <Modal className="w-65 h-40 flex gap-2 relative">
       <BoxButton className="absolute top-1 right-1 backdrop-blur-sm" onClick={props.closeModal}><X /></BoxButton>
-      <div className="w-13 shrink-0 -m-2 p-2 pr-1 -mr-1 overflow-auto">
+      <div className="w-15 shrink-0 -m-2 p-2 pr-1 -mr-1 overflow-auto">
         {Object.keys(Tab).map((t) => {
           if (isNaN(parseInt(t))) return (
             <button key={t} className={"w-full text-left rounded-xl cursor-pointer transition hover:bg-(--box-button-active)" + (Tab[tab] === t ? " text-(--accent) bg-(--accent-background)!" : "")} onClick={() => setTab(Tab[t as keyof typeof Tab])} style={{

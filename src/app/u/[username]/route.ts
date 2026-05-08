@@ -56,7 +56,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ usernam
   if (password.length < 8) return new Response("Password is too short", { status: 400 });
   if (password.length > 50) return new Response("Password is too long", { status: 400 });
 
-  const usernameTaken = (await db.select().from(accountsTable).where(eq(accountsTable.username, username))).values().toArray()[0];
+  const usernameTaken = (await db.select().from(accountsTable).where(eq(accountsTable.username, username)))[0];
   if (usernameTaken) return new Response("Username is taken", { status: 400 });
 
   const id = generateUID((await db.select({ count: count() }).from(accountsTable))[0].count);

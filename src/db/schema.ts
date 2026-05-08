@@ -1,5 +1,7 @@
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+const boolean = () => int({ mode: "boolean" });
+
 export interface Account {
   accent1: string | null;
   accent2: string | null;
@@ -32,7 +34,7 @@ export type AuthorizedAccountFromAPI = Required<Omit<Account, "password">>;
 export const accountsTable = sqliteTable("accounts", {
   accent1: text(),
   accent2: text(),
-  admin: int({ mode: "boolean" }),
+  admin: boolean(),
   bio: text(),
   displayName: text(),
   email: text(),

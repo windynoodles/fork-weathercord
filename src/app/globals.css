@@ -47,6 +47,8 @@
   --background: #060606;
   --background-2: #090909;
   --box-button-active: #aeaeae33;
+  --error-background: #6c0c0e42;
+  --error-outline: #8c4b52;
   --foreground: #fafafa;
   --outline: #292929;
   --outline-active: #424242;

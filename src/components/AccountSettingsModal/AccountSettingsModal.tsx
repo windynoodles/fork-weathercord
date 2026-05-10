@@ -2,10 +2,11 @@
 
 import AboutTab from "./AboutTab";
 import { AuthorizedAccountFromAPI } from "@/db/schema";
-import { BadgeInfo, Puzzle, User, X } from "lucide-react";
+import { BadgeInfo, LoaderCircle, Puzzle, User, X } from "lucide-react";
+import Box from "../Box/Box";
 import BoxButton from "../BoxButton/BoxButton";
 import ConnectionsTab from "./ConnectionsTab";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Modal from "../Modal/Modal";
 import ProfileTab from "./ProfileTab";
 import TabList, { Tab } from "../TabList/TabList";
@@ -14,6 +15,19 @@ export enum ModalTab {
   Profile = 0,
   Connections = 1,
   About = 2
+};
+
+export enum FeedbackStateType {
+  Loading = 1,
+  Message = 2,
+  Error = 3
+}
+
+export type FeedbackState = {
+  type: FeedbackStateType.Loading
+} | {
+  type: FeedbackStateType,
+  message: string
 };
 
 const tabList: Tab[] = [
@@ -38,14 +52,39 @@ const AccountSettingsModal = (props: {
   startingTab?: ModalTab
 }) => {
   let [tab, setTab] = useState(props.startingTab || ModalTab.Profile);
+  // TODO: make feedback states available in all kinds of modals
+  let [feedbackState, setFeedbackState] = useState<FeedbackState | null>(null);
+  let [feedbackStateShowing, setFeedbackStateShowing] = useState(false);
+  let [feedbackStateTimeout, setFeedbackStateTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    setFeedbackStateShowing(!!feedbackState);
+    if (feedbackStateTimeout) clearTimeout(feedbackStateTimeout);
+    if (feedbackState) setFeedbackStateTimeout(setTimeout(() => setFeedbackStateShowing(false), feedbackState.type === FeedbackStateType.Message ? 5000 : 8000));
+  }, [feedbackState]);
 
   return (
     <Modal className="w-65 h-40 flex gap-2 relative">
+      <Box className={"p-1 rounded-2xl absolute -bottom-1.5 right-1/2 select-none transition bg-transparent backdrop-blur-sm pointer-events-none" + (feedbackState?.type === FeedbackStateType.Error ? " bg-(--error-background)! outline-(--error-outline)!" : "")} style={{
+        translate: "50%",
+        scale: feedbackStateShowing ? "1" : "0.8",
+        opacity: feedbackStateShowing ? "1" : "0"
+      }}>
+        {feedbackState &&
+          <>
+            {feedbackState.type === FeedbackStateType.Loading ?
+              <span><LoaderCircle /></span>
+            :
+              <span>{feedbackState.message}</span>
+            }
+          </>
+        }
+      </Box>
       <BoxButton className="absolute top-1 right-1 backdrop-blur-sm" onClick={props.closeModal}><X /></BoxButton>
       <TabList className="w-16 shrink-0 -m-2 p-2 pr-1 -mr-1 relative" tab={tab} tabList={tabList} setTab={setTab} />
       <div className="grow overflow-auto -m-2 p-2 pl-1 -ml-1">
         {tab === ModalTab.Profile &&
-          <ProfileTab account={props.account} setAccount={props.setAccount} />
+          <ProfileTab account={props.account} setAccount={props.setAccount} setFeedbackState={setFeedbackState} />
         }
         {tab === ModalTab.Connections &&
           <ConnectionsTab account={props.account} />

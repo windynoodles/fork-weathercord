@@ -3,12 +3,14 @@
 import { AuthorizedAccountFromAPI } from "@/db/schema";
 import Box from "../Box/Box";
 import { Dispatch, SetStateAction, useState } from "react";
+import { FeedbackState, FeedbackStateType } from "./AccountSettingsModal";
 import { nullish } from "@/lib/api";
 import ProfilePopupContent from "../ProfilePopup/ProfilePopupContent";
 
 const ProfileTab = (props: {
   account: AuthorizedAccountFromAPI,
-  setAccount: Dispatch<SetStateAction<AuthorizedAccountFromAPI | null>>
+  setAccount: Dispatch<SetStateAction<AuthorizedAccountFromAPI | null>>,
+  setFeedbackState: Dispatch<SetStateAction<FeedbackState | null>>
 }) => {
   let [customAccent, setCustomAccent] = useState(!!props.account.accent1);
   let [accent1, setAccent1] = useState(props.account.accent1 ?? "#000000");
@@ -18,8 +20,6 @@ const ProfileTab = (props: {
   let [nameFont, setNameFont] = useState(props.account.nameFont ?? "");
   let [pronouns, setPronouns] = useState(props.account.pronouns ?? "");
   let [username, setUsername] = useState(props.account.username);
-
-  let [error, setError] = useState("");
 
   return (
     <div className="flex gap-2 items-start">
@@ -41,7 +41,10 @@ const ProfileTab = (props: {
           });
 
           if (!res.ok) {
-            setError(await res.text());
+            props.setFeedbackState({
+              type: FeedbackStateType.Error,
+              message: await res.text()
+            });
             return;
           }
 
@@ -59,7 +62,10 @@ const ProfileTab = (props: {
             pronouns: nullish(pronouns),
             username
           });
-          setError("Saved profile");
+          props.setFeedbackState({
+            type: FeedbackStateType.Message,
+            message: "Saved profile"
+          });
         }}>
           <label>
             <div>Display Name</div>
@@ -101,13 +107,6 @@ const ProfileTab = (props: {
           </label>
           <input type="submit" value="Save profile" />
         </form>
-        <div style={{
-          boxSizing: "content-box",
-          height: `${error.length > 0 ? 1 : 0}lh`,
-          overflow: "hidden",
-          paddingTop: `${error.length > 0 ? 1 : 0}rem`,
-          transition: "0.25s"
-        }}>{error}</div>
       </div>
       <Box className="w-20 rounded-2xl overflow-auto">
         <ProfilePopupContent

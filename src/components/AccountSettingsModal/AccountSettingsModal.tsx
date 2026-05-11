@@ -58,6 +58,7 @@ const AccountSettingsModal = (props: {
   let [feedbackStateTimeout, setFeedbackStateTimeout] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    console.log(feedbackState);
     setFeedbackStateShowing(!!feedbackState);
     if (feedbackStateTimeout) clearTimeout(feedbackStateTimeout);
     if (feedbackState) setFeedbackStateTimeout(setTimeout(() => setFeedbackStateShowing(false), feedbackState.type === FeedbackStateType.Message ? 5000 : 8000));
@@ -73,7 +74,7 @@ const AccountSettingsModal = (props: {
         {feedbackState &&
           <>
             {feedbackState.type === FeedbackStateType.Loading ?
-              <span><LoaderCircle /></span>
+              <LoaderCircle width="" height="" className="loading-spin" />
             :
               <span>{feedbackState.message}</span>
             }

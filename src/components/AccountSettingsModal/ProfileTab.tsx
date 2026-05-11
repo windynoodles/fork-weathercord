@@ -27,6 +27,10 @@ const ProfileTab = (props: {
         <form onSubmit={async (event) => {
           event.preventDefault();
 
+          props.setFeedbackState({
+            type: FeedbackStateType.Loading
+          });
+
           const res = await fetch(`/u/${props.account.username}`, {
             method: "PUT",
             body: JSON.stringify({

@@ -221,6 +221,20 @@ textarea {
   height: 6em;
 }
 
+.loading-spin {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    rotate: 0deg;
+  }
+
+  100% {
+    rotate: 360deg;
+  }
+}
+
 @layer base {
   h1 {
     font-size: 1.5rem;

@@ -5,8 +5,23 @@ import { count, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { hash } from "bcrypt";
 import { nullish } from "@/lib/api";
+import sharp from "sharp";
+import { writeFile } from "node:fs/promises";
 
 const generateUID = (sequential: number) => `${Math.floor(sequential).toString(16)}w${Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16).padStart(14, "0")}`;
+
+const dataURIToBlob = (dataURI: string) => {
+  const byteString = atob(dataURI.split(",")[1]);
+  const type = dataURI.split(",")[0].split(":")[1].split(";")[0];
+  const arrayBuffer = new ArrayBuffer(byteString.length);
+  const intArray = new Uint8Array(arrayBuffer);
+
+  for (let i = 0; i < byteString.length; i++) {
+    intArray[i] = byteString.charCodeAt(i);
+  }
+
+  return new Blob([arrayBuffer], { type });
+}
 
 export async function GET(_: Request, { params }: { params: Promise<{ username: string }> }) {
   const account = (await db.select().from(accountsTable).where(eq(accountsTable.username, (await params).username))).values().toArray()[0];
@@ -85,6 +100,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ usernam
 interface PUTBody {
   accent1: string | null,
   accent2: string | null,
+  avatar: string | null,
   bio: string;
   displayName: string;
   nameFont: string;
@@ -107,7 +123,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ username
 
   if (requester.id !== accountToChange.id && !requester.admin) return new Response("You cannot edit this account", { status: 403 });
 
-  const { accent1, accent2, bio, displayName, nameFont, pronouns, username }: Partial<PUTBody> = await req.json();
+  const { accent1, accent2, avatar, bio, displayName, nameFont, pronouns, username }: Partial<PUTBody> = await req.json();
 
   if (typeof bio !== "string") return new Response("Missing bio field", { status: 400 });
   if (typeof displayName !== "string" && typeof displayName === "undefined") return new Response("Missing displayName field", { status: 400 });
@@ -136,6 +152,21 @@ export async function PUT(req: Request, { params }: { params: Promise<{ username
     pronouns,
     username
   }).where(eq(accountsTable.id, accountToChange.id)).execute();
+
+  if (avatar) {
+    await writeFile(
+      "./database/avatars/".concat(requester.id),
+      await sharp(await dataURIToBlob(avatar).bytes(), {
+        animated: true,
+        pages: -1
+      })
+        .webp()
+        .toBuffer(),
+      {
+        encoding: "binary"
+      }
+    );
+  }
 
   return new Response();
 };

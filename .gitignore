@@ -2,6 +2,7 @@
 
 /public/avatar.png
 /public/banner.png
+/database
 
 # dependencies
 /node_modules

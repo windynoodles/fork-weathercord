@@ -13,6 +13,8 @@ const ProfileTab = (props: {
   setFeedbackState: Dispatch<SetStateAction<FeedbackState | null>>
 }) => {
   let [customAccent, setCustomAccent] = useState(!!props.account.accent1);
+  let [avatarFile, setAvatarFile] = useState<File | null>(null);
+  let [avatarPreviewURL, setAvatarPreviewURL] = useState(`/u/${props.account.username}/a`);
   let [accent1, setAccent1] = useState(props.account.accent1 ?? "#000000");
   let [accent2, setAccent2] = useState(props.account.accent2 ?? "#000000");
   let [bio, setBio] = useState(props.account.bio ?? "");
@@ -36,6 +38,7 @@ const ProfileTab = (props: {
             body: JSON.stringify({
               accent1,
               accent2,
+              avatar: avatarFile ? avatarPreviewURL : null,
               bio,
               displayName,
               pronouns,
@@ -71,6 +74,17 @@ const ProfileTab = (props: {
             message: "Saved profile"
           });
         }}>
+          <label>
+            <div>Avatar</div>
+            <input type="file" onChange={(event) => {
+              const avatarFile = event.currentTarget.files?.item(0);
+              if (!avatarFile || !event.currentTarget.files) return;
+              setAvatarFile(avatarFile);
+              const reader = new FileReader();
+              reader.onloadend = () => setAvatarPreviewURL(reader.result?.toString() ?? `/u/${username}/a`);
+              reader.readAsDataURL(avatarFile)
+            }} />
+          </label>
           <label>
             <div>Display Name</div>
             <input type="text" value={displayName} placeholder={username} onChange={(event) => setDisplayName(event.currentTarget.value)} />
@@ -125,7 +139,7 @@ const ProfileTab = (props: {
           nameFont={nullish(nameFont)}
           pronouns={nullish(pronouns)}
           username={username}
-          avatar={"/avatar.png"}
+          avatar={avatarPreviewURL}
           splash={"/banner.png"}
         />
       </Box>

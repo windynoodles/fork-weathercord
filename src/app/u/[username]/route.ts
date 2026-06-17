@@ -102,6 +102,7 @@ interface PUTBody {
   accent1: string | null,
   accent2: string | null,
   avatar: string | null,
+  banner: string | null,
   bio: string;
   displayName: string;
   nameFont: string;
@@ -124,7 +125,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ username
 
   if (requester.id !== accountToChange.id && !requester.admin) return new Response("You cannot edit this account", { status: 403 });
 
-  const { accent1, accent2, avatar, bio, displayName, nameFont, pronouns, username }: Partial<PUTBody> = await req.json();
+  const { accent1, accent2, avatar, banner, bio, displayName, nameFont, pronouns, username }: Partial<PUTBody> = await req.json();
 
   if (typeof bio !== "string") return new Response("Missing bio field", { status: 400 });
   if (typeof displayName !== "string" && typeof displayName === "undefined") return new Response("Missing displayName field", { status: 400 });
@@ -157,34 +158,13 @@ export async function PUT(req: Request, { params }: { params: Promise<{ username
   if (avatar) {
     const blob = dataURIToBlob(avatar);
 
-    if (blob.size > 1500000) return new Response("Avatar file is too large to upload", { status: 400 });
+    if (blob.size > 1000000) return new Response("Avatar file is too large to upload", { status: 400 });
 
     const tempPath = `./database/temp/${requester.id}-avatar.${avatar.split(";")[0].split("/")[1]}`;
 
     await writeFile(tempPath, await blob.bytes(), {
       encoding: "binary"
     });
-
-    // let image = sharp(await blob.bytes(), {
-    //     animated: true,
-    //     pages: -1
-    //   })
-    //   .resize(200, 200)
-
-    // // sharp does not currently support animated AVIF
-    // if ((await image.metadata()).pages) image.webp();
-    // else image.avif();
-
-    // let imageFile = await image.toFile(tempPath);
-
-    // if (imageFile.size > 100000) imageFile = await image
-    //   .resize(100, 100)
-    //   .toFile(tempPath);
-
-    // if (imageFile.size > 100000) {
-    //   await rm(tempPath);
-    //   return new Response("Avatar is too complex. Try choosing a non-animated image or decreasing the resolution.", { status: 400 });
-    // }
 
     await new Promise((resolve) => {
       const child = spawn("ffmpeg", [
@@ -194,6 +174,34 @@ export async function PUT(req: Request, { params }: { params: Promise<{ username
         "-vf", "scale=250:250",   // scaling
         "-y",                     // allow overwrite
         `./database/avatars/${requester.id}.avif`
+      ]);
+      child.on("close", (code) => {
+        resolve(code);
+      });
+    });
+
+    await rm(tempPath);
+  }
+
+  if (banner) {
+    const blob = dataURIToBlob(banner);
+
+    if (blob.size > 1000000) return new Response("Banner file is too large to upload", { status: 400 });
+
+    const tempPath = `./database/temp/${requester.id}-banner.${banner.split(";")[0].split("/")[1]}`;
+
+    await writeFile(tempPath, await blob.bytes(), {
+      encoding: "binary"
+    });
+
+    await new Promise((resolve) => {
+      const child = spawn("ffmpeg", [
+        "-i", tempPath,
+        "-c:v", "libaom-av1",     // encoder (libaom-av1 for AVIF)
+        "-crf", "25",             // quality
+        "-vf", "scale=450:150",   // scaling
+        "-y",                     // allow overwrite
+        `./database/banners/${requester.id}.avif`
       ]);
       child.on("close", (code) => {
         resolve(code);

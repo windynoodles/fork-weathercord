@@ -24,6 +24,8 @@ export async function GET(_: Request) {
     accent1: nullish(account.accent1),
     accent2: nullish(account.accent2),
     admin: !!account.admin,
+    avatar: `/u/${account.username}/a`,
+    banner: `/u/${account.username}/b`,
     bio: nullish(account.bio),
     connections,
     displayName: nullish(account.displayName),

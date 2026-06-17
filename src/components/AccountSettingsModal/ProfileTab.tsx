@@ -13,10 +13,12 @@ const ProfileTab = (props: {
   setFeedbackState: Dispatch<SetStateAction<FeedbackState | null>>
 }) => {
   let [customAccent, setCustomAccent] = useState(!!props.account.accent1);
-  let [avatarFile, setAvatarFile] = useState<File | null>(null);
-  let [avatarPreviewURL, setAvatarPreviewURL] = useState(`/u/${props.account.username}/a`);
   let [accent1, setAccent1] = useState(props.account.accent1 ?? "#000000");
   let [accent2, setAccent2] = useState(props.account.accent2 ?? "#000000");
+  let [avatarFile, setAvatarFile] = useState<File | null>(null);
+  let [avatarPreviewURL, setAvatarPreviewURL] = useState(`/u/${props.account.username}/a`);
+  let [bannerFile, setBannerFile] = useState<File | null>(null);
+  let [bannerPreviewURL, setBannerPreviewURL] = useState(`/u/${props.account.username}/b`);
   let [bio, setBio] = useState(props.account.bio ?? "");
   let [displayName, setDisplayName] = useState(props.account.displayName ?? "");
   let [nameFont, setNameFont] = useState(props.account.nameFont ?? "");
@@ -39,6 +41,7 @@ const ProfileTab = (props: {
               accent1,
               accent2,
               avatar: avatarFile ? avatarPreviewURL : null,
+              banner: bannerFile ? bannerPreviewURL : null,
               bio,
               displayName,
               pronouns,
@@ -59,6 +62,8 @@ const ProfileTab = (props: {
             accent1: customAccent ? accent1 : null,
             accent2: customAccent ? accent2 : null,
             admin: props.account.admin,
+            avatar: avatarPreviewURL,
+            banner: bannerPreviewURL,
             bio: nullish(bio),
             connections: props.account.connections,
             displayName: nullish(displayName),
@@ -82,7 +87,19 @@ const ProfileTab = (props: {
               setAvatarFile(avatarFile);
               const reader = new FileReader();
               reader.onloadend = () => setAvatarPreviewURL(reader.result?.toString() ?? `/u/${username}/a`);
-              reader.readAsDataURL(avatarFile)
+              reader.readAsDataURL(avatarFile);
+            }} />
+            <div>Maximum upload size of 1 MB.</div>
+          </label>
+          <label>
+            <div>Banner</div>
+            <input type="file" onChange={(event) => {
+              const bannerFile = event.currentTarget.files?.item(0);
+              if (!bannerFile || !event.currentTarget.files) return;
+              setBannerFile(bannerFile);
+              const reader = new FileReader();
+              reader.onloadend = () => setBannerPreviewURL(reader.result?.toString() ?? `/u/${username}/b`);
+              reader.readAsDataURL(bannerFile);
             }} />
             <div>Maximum upload size of 1 MB.</div>
           </label>
@@ -141,7 +158,7 @@ const ProfileTab = (props: {
           pronouns={nullish(pronouns)}
           username={username}
           avatar={avatarPreviewURL}
-          splash={"/banner.png"}
+          banner={bannerPreviewURL}
         />
       </Box>
     </div>

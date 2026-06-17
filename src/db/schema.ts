@@ -5,7 +5,9 @@ const boolean = () => int({ mode: "boolean" });
 export interface Account {
   accent1: string | null;
   accent2: string | null;
+  avatar: string;
   admin: boolean;
+  banner: string;
   bio: string | null;
   connections: Connection[];
   displayName: string | null;

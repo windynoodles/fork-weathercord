@@ -9,8 +9,8 @@ import UsernameIDSwitcher from "./UsernameIDSwitcher";
 
 const ProfilePopupContent = (props: Record<string, any> & PublicAccount & {
   avatar: string,
-  canEdit?: boolean,
-  splash?: string
+  banner?: string,
+  canEdit?: boolean
 }) => {
   let accent1 = props.accent1;
   let accent2 = props.accent2;
@@ -27,9 +27,9 @@ const ProfilePopupContent = (props: Record<string, any> & PublicAccount & {
 
   return (
     <div className={"profileCard text-left " + props.className} style={props.style}>
-      {props.splash &&
+      {props.banner &&
         <div className="h-7 w-full -mb-7" aria-hidden style={{
-          backgroundImage: `url(${props.splash})`,
+          backgroundImage: `url(${props.banner})`,
           backgroundSize: "cover",
           backgroundPosition: "center"
         }} />

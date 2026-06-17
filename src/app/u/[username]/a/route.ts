@@ -10,7 +10,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
 
   if (!account) return new Response(null, { status: 404 });
 
-  let path = "./database/avatars/".concat(account.id);
+  let path = "./database/avatars/".concat(account.id, ".avif");
   let exists = existsSync(path);
   if (!exists) path = "./public/default.webp";
   let buffer = (await readFile(path)).buffer;
@@ -18,7 +18,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
   const sizeParam = new URLSearchParams(new URL(req.url).search).get("size");
   if (sizeParam) {
     const size = parseInt(sizeParam);
-    if (!isNaN(size) && size > 0 && size <= 500) {
+    if (!isNaN(size) && size > 0 && size < 250) {
       buffer = new Uint8Array(
         (
           await sharp(buffer, {
@@ -34,7 +34,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
 
   return new Response(buffer, {
     headers: {
-      "Content-Type": "image/webp"
+      "Content-Type": "image/avif"
     }
   });
 };

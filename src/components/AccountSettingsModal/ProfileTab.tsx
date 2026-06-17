@@ -84,6 +84,7 @@ const ProfileTab = (props: {
               reader.onloadend = () => setAvatarPreviewURL(reader.result?.toString() ?? `/u/${username}/a`);
               reader.readAsDataURL(avatarFile)
             }} />
+            <div>Maximum upload size of 1 MB.</div>
           </label>
           <label>
             <div>Display Name</div>

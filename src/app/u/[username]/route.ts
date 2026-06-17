@@ -5,8 +5,9 @@ import { count, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { hash } from "bcrypt";
 import { nullish } from "@/lib/api";
+import { rename, rm, writeFile } from "node:fs/promises";
 import sharp from "sharp";
-import { writeFile } from "node:fs/promises";
+import { spawn } from "node:child_process";
 
 const generateUID = (sequential: number) => `${Math.floor(sequential).toString(16)}w${Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16).padStart(14, "0")}`;
 
@@ -154,18 +155,52 @@ export async function PUT(req: Request, { params }: { params: Promise<{ username
   }).where(eq(accountsTable.id, accountToChange.id)).execute();
 
   if (avatar) {
-    await writeFile(
-      "./database/avatars/".concat(requester.id),
-      await sharp(await dataURIToBlob(avatar).bytes(), {
-        animated: true,
-        pages: -1
-      })
-        .webp()
-        .toBuffer(),
-      {
-        encoding: "binary"
-      }
-    );
+    const blob = dataURIToBlob(avatar);
+
+    if (blob.size > 1500000) return new Response("Avatar file is too large to upload", { status: 400 });
+
+    const tempPath = `./database/temp/${requester.id}-avatar.${avatar.split(";")[0].split("/")[1]}`;
+
+    await writeFile(tempPath, await blob.bytes(), {
+      encoding: "binary"
+    });
+
+    // let image = sharp(await blob.bytes(), {
+    //     animated: true,
+    //     pages: -1
+    //   })
+    //   .resize(200, 200)
+
+    // // sharp does not currently support animated AVIF
+    // if ((await image.metadata()).pages) image.webp();
+    // else image.avif();
+
+    // let imageFile = await image.toFile(tempPath);
+
+    // if (imageFile.size > 100000) imageFile = await image
+    //   .resize(100, 100)
+    //   .toFile(tempPath);
+
+    // if (imageFile.size > 100000) {
+    //   await rm(tempPath);
+    //   return new Response("Avatar is too complex. Try choosing a non-animated image or decreasing the resolution.", { status: 400 });
+    // }
+
+    await new Promise((resolve) => {
+      const child = spawn("ffmpeg", [
+        "-i", tempPath,
+        "-c:v", "libaom-av1",     // encoder (libaom-av1 for AVIF)
+        "-crf", "25",             // quality
+        "-vf", "scale=250:250",   // scaling
+        "-y",                     // allow overwrite
+        `./database/avatars/${requester.id}.avif`
+      ]);
+      child.on("close", (code) => {
+        resolve(code);
+      });
+    });
+
+    await rm(tempPath);
   }
 
   return new Response();

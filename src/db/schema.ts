@@ -11,7 +11,7 @@ export interface Account {
   bio: string | null;
   connections: Connection[];
   displayName: string | null;
-  email?: string;
+  email: string;
   nameFont: string | null;
   id: string;
   joined: number;
@@ -30,7 +30,7 @@ export interface Connection {
   value: string;
 }
 
-export type PublicAccount = Pick<Required<Account>, "accent1" | "accent2" | "admin" | "bio" | "connections" | "displayName" | "id" | "joined" | "nameFont" | "pronouns" | "username">;
+export type PublicAccount = Omit<Required<Account>, "email" | "password">;
 export type AuthorizedAccountFromAPI = Required<Omit<Account, "password">>;
 
 export const accountsTable = sqliteTable("accounts", {
@@ -39,7 +39,7 @@ export const accountsTable = sqliteTable("accounts", {
   admin: boolean(),
   bio: text(),
   displayName: text(),
-  email: text(),
+  email: text().notNull(),
   nameFont: text(),
   id: text().notNull().unique(),
   joined: int().notNull(),

@@ -1,4 +1,4 @@
-import { accountsTable, connectionsTable, sessionsTable } from "@/db/schema";
+import { accountsTable, AuthorizedAccountFromAPI, Connection, connectionsTable, sessionsTable } from "@/db/schema";
 import { cookies } from "next/headers";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
@@ -18,7 +18,7 @@ export async function GET(_: Request) {
   // it should never happen :sob:
   if (!account) return new Response("this is weird", { status: 404 });
 
-  const connections = (await db.select().from(connectionsTable).where(eq(connectionsTable.id, account.id))).values().toArray();
+  const connections = (await db.select().from(connectionsTable).where(eq(connectionsTable.id, account.id))).values().toArray() as Connection[];
 
   return new Response(JSON.stringify({
     accent1: nullish(account.accent1),
@@ -35,7 +35,7 @@ export async function GET(_: Request) {
     nameFont: nullish(account.nameFont),
     pronouns: nullish(account.pronouns),
     username: account.username
-  }), {
+  } satisfies AuthorizedAccountFromAPI), {
     headers: {
       "Content-Type": "application/json"
     }

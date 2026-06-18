@@ -1,12 +1,11 @@
-import { accountsTable, connectionsTable, sessionsTable } from "@/db/schema";
+import { accountsTable, Connection, connectionsTable, PublicAccount, sessionsTable } from "@/db/schema";
 import cryptoRandomString from "crypto-random-string";
 import { cookies } from "next/headers";
 import { count, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { hash } from "bcrypt";
 import { nullish } from "@/lib/api";
-import { rename, rm, writeFile } from "node:fs/promises";
-import sharp from "sharp";
+import { rm, writeFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 
 const generateUID = (sequential: number) => `${Math.floor(sequential).toString(16)}w${Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16).padStart(14, "0")}`;
@@ -29,12 +28,14 @@ export async function GET(_: Request, { params }: { params: Promise<{ username: 
 
   if (!account) return new Response(null, { status: 404 });
 
-  const connections = (await db.select().from(connectionsTable).where(eq(connectionsTable.id, account.id))).values().toArray();
+  const connections = (await db.select().from(connectionsTable).where(eq(connectionsTable.id, account.id))).values().toArray() as Connection[];
 
   return new Response(JSON.stringify({
     accent1: nullish(account.accent1),
     accent2: nullish(account.accent2),
+    avatar: `/u/${account.username}/a`,
     admin: !!account.admin,
+    banner: `/u/${account.username}/b`,
     bio: nullish(account.bio),
     connections,
     displayName: nullish(account.displayName),
@@ -43,7 +44,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ username: 
     nameFont: nullish(account.nameFont),
     pronouns: nullish(account.pronouns),
     username: account.username
-  }), {
+  } satisfies PublicAccount), {
     headers: {
       "Content-Type": "application/json"
     }

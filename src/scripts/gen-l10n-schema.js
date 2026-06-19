@@ -8,7 +8,6 @@ for (const key of Object.keys(data)) {
   console.log(key);
   buffer += `  | "${key}"\n`;
 }
-buffer = buffer.replace(/=\n  \| /, "=\n    ");
 buffer = buffer.replace(/\n$/, ";\n");
 buffer += "\nexport type l10n = Record<l10nValue, string>;\n";
 

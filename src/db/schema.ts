@@ -12,9 +12,10 @@ export interface Account {
   connections: Connection[];
   displayName: string | null;
   email: string;
-  nameFont: string | null;
   id: string;
   joined: number;
+  lang: string;
+  nameFont: string | null;
   password: string;
   pronouns: string | null;
   username: string;
@@ -40,9 +41,10 @@ export const accountsTable = sqliteTable("accounts", {
   bio: text(),
   displayName: text(),
   email: text().notNull(),
-  nameFont: text(),
   id: text().notNull().unique(),
   joined: int().notNull(),
+  lang: text().notNull().default("en-us"),
+  nameFont: text(),
   password: text().notNull(),
   pronouns: text(),
   username: text().notNull().unique()

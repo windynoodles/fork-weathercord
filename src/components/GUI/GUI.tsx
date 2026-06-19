@@ -5,19 +5,25 @@ import { AuthorizedAccountFromAPI } from "@/db/schema";
 import LoadingScreen from "../LoadingScreen/LoadingScreen";
 import { ModalType } from "@/lib/modals";
 import { Prompt } from "../Prompt/Prompt";
+import { setl10nData } from "../DefaultMessage/localize";
 import SignUpModal from "../SignUpModal/SignUpModal";
 import { useEffect, useState } from "react";
 import UserIndicator from "../UserIndicator/UserIndicator";
 
 const GUI = () => {
   const [account, setAccount] = useState<AuthorizedAccountFromAPI | null>(null);
+  const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState<ModalType | null>(null);
   const [initialAccountSettingsTab, setInitialAccountSettingsTab] = useState(0);
 
   useEffect(() => {
     fetch("/whoami")
       .then((res) => res.json())
-      .then((account) => setAccount(account));
+      .then((account) => {
+        setAccount(account);
+        setl10nData(account.lang)
+          .then(() => setLoading(false));
+      });
 
     if (location.pathname.startsWith("/settings")) {
       const tabName = location.pathname.match(/^\/settings\/?(.+)$/)?.[1]!;
@@ -28,7 +34,7 @@ const GUI = () => {
     }
   }, [0]);
 
-  if (!account) return (
+  if (!account || loading) return (
     <LoadingScreen />
   );
 

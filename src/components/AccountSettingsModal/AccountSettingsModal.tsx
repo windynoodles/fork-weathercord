@@ -6,6 +6,7 @@ import { BadgeInfo, LoaderCircle, Puzzle, User, X } from "lucide-react";
 import Box from "../Box/Box";
 import BoxButton from "../BoxButton/BoxButton";
 import ConnectionsTab from "./ConnectionsTab";
+import DefaultMessage from "../DefaultMessage/DefaultMessage";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Modal from "../Modal/Modal";
 import ProfileTab from "./ProfileTab";
@@ -39,17 +40,17 @@ export type FeedbackState = {
 const tabList: Tab[] = [
   {
     icon: <User strokeWidth={1.5} />,
-    name: "Profile",
+    name: <DefaultMessage id="settings.tab.profile" />,
     url: "/settings/profile"
   },
   {
     icon: <Puzzle strokeWidth={1.5} />,
-    name: "Connections",
+    name: <DefaultMessage id="settings.tab.connections" />,
     url: "/settings/connections"
   },
   {
     icon: <BadgeInfo strokeWidth={1.5} />,
-    name: "About",
+    name: <DefaultMessage id="settings.tab.about" />,
     url: "/settings/about"
   }
 ];

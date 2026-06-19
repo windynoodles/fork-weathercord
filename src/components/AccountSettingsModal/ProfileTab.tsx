@@ -2,6 +2,7 @@
 
 import { AuthorizedAccountFromAPI } from "@/db/schema";
 import Box from "../Box/Box";
+import DefaultMessage, { defaultMessage } from "../DefaultMessage/DefaultMessage";
 import { Dispatch, SetStateAction, useState } from "react";
 import { FeedbackState, FeedbackStateType } from "./AccountSettingsModal";
 import { nullish } from "@/lib/api";
@@ -70,6 +71,7 @@ const ProfileTab = (props: {
             email: props.account.email,
             id: props.account.id,
             joined: props.account.joined,
+            lang: props.account.lang,
             nameFont: nullish(nameFont),
             pronouns: nullish(pronouns),
             username
@@ -80,7 +82,7 @@ const ProfileTab = (props: {
           });
         }}>
           <label>
-            <div>Avatar</div>
+            <div><DefaultMessage id="settings.tab.profile.avatar" /></div>
             <input type="file" onChange={(event) => {
               const avatarFile = event.currentTarget.files?.item(0);
               if (!avatarFile || !event.currentTarget.files) return;
@@ -89,10 +91,15 @@ const ProfileTab = (props: {
               reader.onloadend = () => setAvatarPreviewURL(reader.result?.toString() ?? `/u/${username}/a`);
               reader.readAsDataURL(avatarFile);
             }} />
-            <div>Maximum upload size of 1 MB.</div>
+            <div><DefaultMessage
+              id="settings.tab.profile.upload-limit"
+              values={{
+                limit: "1"
+              }}
+            /></div>
           </label>
           <label>
-            <div>Banner</div>
+            <div><DefaultMessage id="settings.tab.profile.banner" /></div>
             <input type="file" onChange={(event) => {
               const bannerFile = event.currentTarget.files?.item(0);
               if (!bannerFile || !event.currentTarget.files) return;
@@ -101,47 +108,52 @@ const ProfileTab = (props: {
               reader.onloadend = () => setBannerPreviewURL(reader.result?.toString() ?? `/u/${username}/b`);
               reader.readAsDataURL(bannerFile);
             }} />
-            <div>Maximum upload size of 1 MB.</div>
+            <div><DefaultMessage
+              id="settings.tab.profile.upload-limit"
+              values={{
+                limit: "1"
+              }}
+            /></div>
           </label>
           <label>
-            <div>Display Name</div>
+            <div><DefaultMessage id="settings.tab.profile.display-name" /></div>
             <input type="text" value={displayName} placeholder={username} onChange={(event) => setDisplayName(event.currentTarget.value)} />
           </label>
           <label>
-            <div>Name Font</div>
+            <div><DefaultMessage id="settings.tab.profile.name-font" /></div>
             <select value={nameFont} onChange={(event) => {
               setNameFont(event.target.value);
             }} style={{
               fontFamily: nameFont
             }}>
-              <option value="">Default</option>
-              <option value="Alfa Slab One">Bold</option>
-              <option value="Leckerli One">Cursive</option>
-              <option value="Maple Mono">Monospace</option>
-              <option value="Merriweather">Serif</option>
-              <option value="Goldman">Techno</option>
+              <option value=""><DefaultMessage id="settings.tab.profile.name-font.default" /></option>
+              <option value="Alfa Slab One"><DefaultMessage id="settings.tab.profile.name-font.bold" /></option>
+              <option value="Leckerli One"><DefaultMessage id="settings.tab.profile.name-font.cursive" /></option>
+              <option value="Maple Mono"><DefaultMessage id="settings.tab.profile.name-font.monospace" /></option>
+              <option value="Merriweather"><DefaultMessage id="settings.tab.profile.name-font.serif" /></option>
+              <option value="Goldman"><DefaultMessage id="settings.tab.profile.name-font.techno" /></option>
             </select>
           </label>
           <label>
-            <div>Username</div>
+            <div><DefaultMessage id="settings.tab.profile.username" /></div>
             <input type="text" value={username} onChange={(event) => setUsername(event.currentTarget.value)} />
           </label>
           <label>
-            <div>Pronouns</div>
+            <div><DefaultMessage id="settings.tab.profile.pronouns" /></div>
             <input type="text" value={pronouns} onChange={(event) => setPronouns(event.currentTarget.value)} />
           </label>
           <label>
-            <div><input type="checkbox" checked={customAccent} onChange={(event) => setCustomAccent(event.currentTarget.checked)} /> Card Accent</div>
+            <div><input type="checkbox" checked={customAccent} onChange={(event) => setCustomAccent(event.currentTarget.checked)} /> <DefaultMessage id="settings.tab.profile.card-accent" /></div>
             {customAccent && <>
               <input type="color" value={accent1} onChange={(event) => setAccent1(event.currentTarget.value)} />
               <input type="color" value={accent2} onChange={(event) => setAccent2(event.currentTarget.value)} />
             </>}
           </label>
           <label>
-            <div>Bio</div>
+            <div><DefaultMessage id="settings.tab.profile.bio" /></div>
             <textarea value={bio} onChange={(event) => setBio(event.currentTarget.value)}></textarea>
           </label>
-          <input type="submit" value="Save profile" />
+          <input type="submit" value={defaultMessage("settings.tab.profile.save")} />
         </form>
       </div>
       <Box className="w-20 rounded-2xl overflow-auto">

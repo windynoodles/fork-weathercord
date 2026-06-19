@@ -41,6 +41,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ username: 
     displayName: nullish(account.displayName),
     id: account.id,
     joined: account.joined,
+    lang: account.lang,
     nameFont: nullish(account.nameFont),
     pronouns: nullish(account.pronouns),
     username: account.username

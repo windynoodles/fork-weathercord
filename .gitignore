@@ -3,6 +3,7 @@
 /public/avatar.png
 /public/banner.png
 /database
+*.generated.*
 
 # dependencies
 /node_modules

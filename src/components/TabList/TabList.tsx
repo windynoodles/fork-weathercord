@@ -4,7 +4,7 @@ import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 export interface Tab {
   icon: ReactNode;
-  name: string;
+  name: string | ReactNode;
   url?: string;
 }
 

@@ -6,8 +6,9 @@ import convert from "color-convert";
 import { Cake, Globe, Heart, Shield, Star } from "lucide-react";
 import { ConnectionType, type PublicAccount } from "@/db/schema";
 import UsernameIDSwitcher from "./UsernameIDSwitcher";
+import DefaultMessage from "../DefaultMessage/DefaultMessage";
 
-const ProfilePopupContent = (props: Record<string, any> & PublicAccount & {
+const ProfilePopupContent = (props: Record<string, any> & Omit<PublicAccount, "lang"> & {
   canEdit?: boolean
 }) => {
   let accent1 = props.accent1;
@@ -50,15 +51,28 @@ const ProfilePopupContent = (props: Record<string, any> & PublicAccount & {
         }
         <div>
           {props.id === "0w1bcb00925be5d2" &&
-            <Badge color="#ff879f" icon={<Star />} value="Founder" />
+            <Badge color="#ff879f" icon={<Star />} value={(
+              <DefaultMessage id="badge.founder" />
+            )} />
           }
           {props.admin &&
-            <Badge color="#6bc1ff" icon={<Shield />} value="Administrator" />
+            <Badge color="#6bc1ff" icon={<Shield />} value={(
+              <DefaultMessage id="badge.admin" />
+            )} />
           }
           {contributors.some((contributor) => contributor.id === props.id) &&
-            <Badge color="#ff87cf" icon={<Heart />} value="Source Code Contributor" />
+            <Badge color="#ff87cf" icon={<Heart />} value={(
+              <DefaultMessage id="badge.contributor" />
+            )} />
           }
-          <Badge color="#ffc2fc" icon={<Cake />} value={`Joined ${new Date(props.joined).toLocaleDateString()}`} />
+          <Badge color="#ffc2fc" icon={<Cake />} value={(
+              <DefaultMessage
+                id="badge.joined"
+                values={{
+                  date: new Date(props.joined).toLocaleDateString()
+                }}
+              />
+            )} />
         </div>
         {props.connections.length > 0 &&
           <div>

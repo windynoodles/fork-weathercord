@@ -1,14 +1,31 @@
+import { APP_NAME } from "@/lib/constants";
 import Box from "../Box/Box";
 import { contributors } from "@/lib/contributors";
+import DefaultMessage from "../DefaultMessage/DefaultMessage";
 import { Heart, Quote } from "lucide-react";
 
 const AboutTab = () => {
   return (
     <>
-      <h1>About Weathercord</h1>
-      <p>Weathercord is an instant messaging app made to be highly customisable and personal.</p>
-      <h2><Heart /> Source Code Contributors</h2>
-      <p>Weathercord is an open source project, meaning anyone can contribute to development! Below is a list of people who have contributed source code to Weathercord.</p>
+      <h1><DefaultMessage
+        id="settings.tab.about.header"
+        values={{
+          APP_NAME
+        }}
+      /></h1>
+      <p><DefaultMessage
+        id="settings.tab.about.header.paragraph-1"
+        values={{
+          APP_NAME
+        }}
+      /></p>
+      <h2><Heart /> <DefaultMessage id="settings.tab.about.contributors" /></h2>
+      <p><DefaultMessage
+        id="settings.tab.about.contributors.paragraph-1"
+        values={{
+          APP_NAME
+        }}
+      /></p>
       <div className="grid grid-cols-2 mt-1">
         {contributors.map((contributor, index) => {
           return (

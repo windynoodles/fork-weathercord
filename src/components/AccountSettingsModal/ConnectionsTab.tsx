@@ -3,6 +3,7 @@
 import ActionRow from "../ActionRow/ActionRow";
 import { AuthorizedAccountFromAPI, ConnectionType } from "@/db/schema";
 import Box from "../Box/Box";
+import DefaultMessage from "../DefaultMessage/DefaultMessage";
 import { Globe } from "lucide-react";
 import { ReactNode, useState } from "react";
 
@@ -27,7 +28,7 @@ const ConnectionsTab = (props: {
 
   return (
     <>
-      <h1>Connections</h1>
+      <h1><DefaultMessage id="settings.tab.connections" /></h1>
       <ActionRow>
         {connectionOptions.map((connectionOption, index) => {
           return (

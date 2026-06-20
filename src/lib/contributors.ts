@@ -15,8 +15,8 @@ export interface Contributor {
   quote?: string;
 }
 
-export const team = Object.freeze<Contributor[]>([
-  {
+const people = {
+  rayne: {
     id: "0w1bcb00925be5d2",
     name: "Rayne D.",
     roles: [ContributorRole.Founder, ContributorRole.Programmer],
@@ -26,7 +26,7 @@ export const team = Object.freeze<Contributor[]>([
     },
     quote: "i love tally"
   },
-  {
+  tally: {
     id: "1w053d3942035cb9",
     name: "tally",
     roles: [ContributorRole.Translator],
@@ -36,7 +36,7 @@ export const team = Object.freeze<Contributor[]>([
     },
     quote: "bleps at u"
   },
-  {
+  dde: {
     name: "ddededodediamante",
     roles: [ContributorRole.Translator],
     github: {
@@ -45,6 +45,14 @@ export const team = Object.freeze<Contributor[]>([
     },
     quote: "I'm ddededodediamante!"
   }
+};
+
+export const team = Object.freeze<Contributor[]>([
+  people.rayne,
+  people.tally,
+  people.dde
 ]);
 
-export const contributors = Object.freeze<Contributor[]>([]);
+export const contributors = Object.freeze<Contributor[]>([
+  people.tally
+]);

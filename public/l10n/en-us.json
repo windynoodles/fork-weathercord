@@ -3,6 +3,7 @@
   "badge.founder": "Founder",
   "badge.contributor": "Source Code Contributor",
   "badge.joined": "Joined {{date}}",
+  "profile-popup.edit": "Edit profile",
   "role.founder": "Founder",
   "role.programmer": "Programmer",
   "role.translator": "Translator",

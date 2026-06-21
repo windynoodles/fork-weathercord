@@ -87,7 +87,7 @@ const ProfilePopupContent = (props: Record<string, any> & Omit<PublicAccount, "l
           </div>
         }
       {props.canEdit && (
-        <button className="action" onClick={() => props.setModal?.(ModalType.AccountSettings)}>Edit profile</button>
+        <button className="action" onClick={() => props.setModal?.(ModalType.AccountSettings)}><DefaultMessage id="profile-popup.edit" /></button>
       )}
       </div>
     </div>
